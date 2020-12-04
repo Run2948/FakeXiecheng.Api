@@ -47,6 +47,17 @@ namespace FakeXiecheng.Api.Models
         [MaxLength]
         public string Notes { get; set; }
 
+        /// <summary>
+        /// 评级
+        /// </summary>
+        public double? Rating { get; set; }
+
+        public TravelDays? TravelDays { get; set; }
+
+        public TripType? TripType { get; set; }
+
+        public DepartureCity? DepartureCity { get; set; }
+
         public virtual ICollection<TouristRoutePicture> TouristRoutePictures { get; set; }
     }
 }

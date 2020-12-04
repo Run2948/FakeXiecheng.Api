@@ -70,3 +70,39 @@ add-migration SeedData
 update-database
 ```
 
+* 完成数据库结构的更新
+
+```shell
+add-migration updateTouristRoute
+
+update-database
+```
+
+### 启用 MySQL 数据库
+
+* 创建 mysql 数据库服务 
+
+```shell
+docker run -itd --name asp-mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 mysql
+```
+
+* 安装依赖
+
+```xml
+<ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.2.4" />
+  </ItemGroup>
+```
+
+* 删除 Migrations 文件夹全部内容，并重新开始数据库迁移
+
+```shell
+add-migration mysqlInit
+
+update-database
+```
