@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using FakeXiecheng.Api.Models;
 
 namespace FakeXiecheng.Api.Dtos
 {
@@ -39,7 +39,7 @@ namespace FakeXiecheng.Api.Dtos
 
         public string Notes { get; set; }
 
-        public List<TouristRoutePictureDto> TouristRoutePictures { get; set; }
+        public IEnumerable<TouristRoutePictureDto> TouristRoutePictures { get; set; }
 
         /// <summary>
         /// 评级
@@ -51,5 +51,58 @@ namespace FakeXiecheng.Api.Dtos
         public string TripType { get; set; }
 
         public string DepartureCity { get; set; }
+    }
+
+    // [TouristRouteTitleMustBeDifferentFromDescription]
+    public class TouristRouteForCreationDto : IValidatableObject
+    {
+        [Required(ErrorMessage = "title不可为空")]
+        [MaxLength(100)]
+        public string Title { get; set; }
+        [Required]
+        [MaxLength(1500)]
+        public string Description { get; set; }
+        public decimal OriginalPrice { get; set; }
+        public double? DiscountPresent { get; set; }
+        public DateTime CreateTime { get; set; }
+        public DateTime? UpdateTime { get; set; }
+        public DateTime? DepartureTime { get; set; }
+        public string Features { get; set; }
+        public string Fees { get; set; }
+        public string Notes { get; set; }
+        public double? Rating { get; set; }
+        public string TravelDays { get; set; }
+        public string TripType { get; set; }
+        public string DepartureCity { get; set; }
+
+        public IEnumerable<TouristRoutePictureForCreationDto> TouristRoutePictures { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (Title == Description)
+            {
+                yield return new ValidationResult(
+                    "路线名称必须与描述不同",
+                    new[] { "TouristRouteForCreationDto" }
+                );
+            }
+        }
+    }
+
+    public class TouristRouteTitleMustBeDifferentFromDescription : ValidationAttribute
+    {
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            var touristRouteDto = (TouristRouteForCreationDto)validationContext.ObjectInstance;
+            if (touristRouteDto.Title == touristRouteDto.Description)
+            {
+                return new ValidationResult(
+                    "路线名称必须与描述不同",
+                    new[] { "TouristRouteForCreationDto" }
+                );
+            }
+
+            return ValidationResult.Success;
+        }
     }
 }

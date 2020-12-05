@@ -11,4 +11,9 @@ namespace FakeXiecheng.Api.Dtos
         public string Url { get; set; }
         // public Guid TouristRouteId { get; set; }
     }
+
+    public class TouristRoutePictureForCreationDto
+    {
+        public string Url { get; set; }
+    }
 }

@@ -29,13 +29,21 @@ namespace FakeXiecheng.Api
                     dest => dest.DepartureCity,
                     opt => opt.MapFrom(src => src.DepartureCity.ToString())
                 )
-                .ForMember(
-                    dest => dest.TouristRoutePictures,
-                    opt => opt.MapFrom((src, _, __, ctx) => ctx.Mapper.Map<List<TouristRoutePictureDto>>(src.TouristRoutePictures))
-                    )
+                // .ForMember(
+                //     dest => dest.TouristRoutePictures,
+                //     opt => opt.MapFrom((src, _, __, ctx) => ctx.Mapper.Map<List<TouristRoutePictureDto>>(src.TouristRoutePictures))
+                //     )
+                ;
+
+            CreateMap<TouristRouteForCreationDto, TouristRoute>()
+                .ForMember(dest => dest.Id,
+                    opt => opt.MapFrom(src => Guid.NewGuid()))
+                // .ForMember(dest => dest.TouristRoutePictures,
+                //     opt => opt.MapFrom((src, _, __, ctx) => ctx.Mapper.Map<List<TouristRoutePicture>>(src.TouristRoutePictures)))
                 ;
 
             CreateMap<TouristRoutePicture, TouristRoutePictureDto>();
+            CreateMap<TouristRoutePictureForCreationDto, TouristRoutePicture>();
 
         }
     }
