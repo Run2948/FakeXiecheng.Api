@@ -6,7 +6,7 @@ using FakeXiecheng.Api.Models;
 
 namespace FakeXiecheng.Api.Repository.Impl
 {
-    public class MockTouristRouteRepository : ITouristRouteRepository
+    public class MockTouristRouteRepository //: ITouristRouteRepository
     {
         private List<TouristRoute> _routes;
 

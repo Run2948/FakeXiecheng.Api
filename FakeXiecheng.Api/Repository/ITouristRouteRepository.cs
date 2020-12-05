@@ -11,5 +11,11 @@ namespace FakeXiecheng.Api.Repository
         IEnumerable<TouristRoute> GetTouristRoutes();
 
         TouristRoute GetTouristRoute(Guid touristRouteId);
+
+        bool TouristRouteExists(Guid touristRouteId);
+
+        IEnumerable<TouristRoutePicture> GetTouristRoutePictures(Guid touristRouteId);
+
+        TouristRoutePicture GetTouristRoutePicture(int pictureId);
     }
 }
