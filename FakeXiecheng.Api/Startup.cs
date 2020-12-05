@@ -16,6 +16,7 @@ using FakeXiecheng.Api.Common.Extensions;
 using FakeXiecheng.Api.Repository;
 using FakeXiecheng.Api.Repository.Impl;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +41,9 @@ namespace FakeXiecheng.Api
         public void ConfigureServices(IServiceCollection services)
         {
             Configuration.AddSectionValue<JwtConfigs>();
+
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<AppDbContext>();
 
             // services.AddTransient<ITouristRouteRepository,MockTouristRouteRepository>();
             services.AddTransient<ITouristRouteRepository, TouristRouteRepository>();

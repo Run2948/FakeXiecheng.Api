@@ -4,13 +4,15 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using FakeXiecheng.Api.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace FakeXiecheng.Api.Repository
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<IdentityUser> //DbContext
     {
         private readonly ILogger<AppDbContext> _logger;
 
