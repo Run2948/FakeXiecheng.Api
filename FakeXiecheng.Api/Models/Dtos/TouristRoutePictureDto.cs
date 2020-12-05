@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FakeXiecheng.Api.Dtos
+namespace FakeXiecheng.Api.Models.Dtos
 {
     public class TouristRoutePictureDto
     {

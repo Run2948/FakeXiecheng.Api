@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using FakeXiecheng.Api.Dtos;
+using FakeXiecheng.Api.Models.Dtos;
 using FakeXiecheng.Api.Models;
 using FakeXiecheng.Api.Repository;
 

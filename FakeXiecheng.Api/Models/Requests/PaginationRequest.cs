@@ -1,6 +1,6 @@
-﻿namespace FakeXiecheng.Api.ResourceParameters
+﻿namespace FakeXiecheng.Api.Models.Requests
 {
-    public class PaginationResourceParameters
+    public class PaginationRequest
     {
         private const int MaxPageSize = 50;
 

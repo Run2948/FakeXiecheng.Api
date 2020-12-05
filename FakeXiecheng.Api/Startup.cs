@@ -10,6 +10,8 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
+using FakeXiecheng.Api.Common;
+using FakeXiecheng.Api.Common.Extensions;
 using FakeXiecheng.Api.Repository;
 using FakeXiecheng.Api.Repository.Impl;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +36,8 @@ namespace FakeXiecheng.Api
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            Configuration.AddSectionValue<JwtConfigs>();
+
             // services.AddTransient<ITouristRouteRepository,MockTouristRouteRepository>();
             services.AddTransient<ITouristRouteRepository, TouristRouteRepository>();
             services.AddDbContext<AppDbContext>(options =>

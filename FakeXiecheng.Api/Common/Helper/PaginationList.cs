@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace FakeXiecheng.Api.Helper
+namespace FakeXiecheng.Api.Common.Helper
 {
     public class PaginationList<T> : List<T>
     {

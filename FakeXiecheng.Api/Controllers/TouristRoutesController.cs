@@ -5,11 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using FakeXiecheng.Api.Dtos;
-using FakeXiecheng.Api.Helper;
+using FakeXiecheng.Api.Models.Dtos;
+using FakeXiecheng.Api.Common.Helper;
 using FakeXiecheng.Api.Models;
 using FakeXiecheng.Api.Repository;
-using FakeXiecheng.Api.ResourceParameters;
+using FakeXiecheng.Api.Models.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 
@@ -30,9 +30,9 @@ namespace FakeXiecheng.Api.Controllers
 
         [HttpGet]
         [HttpHead]
-        public async Task<IActionResult> Get([FromQuery] TouristRouteResourceParameters parameters)
+        public async Task<IActionResult> Get([FromQuery] TouristRouteRequest request)
         {
-            var routes = await _touristRouteRepository.GetTouristRoutesAsync(parameters.Keyword, parameters.RatingOperator, parameters.RatingValue, parameters.PageNumber, parameters.PageSize);
+            var routes = await _touristRouteRepository.GetTouristRoutesAsync(request.Keyword, request.RatingOperator, request.RatingValue, request.PageNumber, request.PageSize);
             if (!routes.Any()) return NotFound("没有找到旅游路线");
             return Ok(_mapper.Map<List<TouristRouteDto>>(routes));
         }

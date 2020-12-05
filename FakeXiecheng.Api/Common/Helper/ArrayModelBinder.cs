@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace FakeXiecheng.Api.Helper
+namespace FakeXiecheng.Api.Common.Helper
 {
     public class ArrayModelBinder : IModelBinder
     {
