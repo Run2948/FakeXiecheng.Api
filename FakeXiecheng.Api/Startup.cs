@@ -8,16 +8,19 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using FakeXiecheng.Api.Common;
 using FakeXiecheng.Api.Common.Extensions;
 using FakeXiecheng.Api.Repository;
 using FakeXiecheng.Api.Repository.Impl;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
 
@@ -56,9 +59,31 @@ namespace FakeXiecheng.Api
                         .AllowAnyOrigin()
                         .AllowAnyMethod()
                         .AllowAnyHeader();
-
                 });
             });
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+
+                    options.SaveToken = true;
+
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateAudience = true,
+                        ValidAudience = JwtConfigs.Issuer,
+
+                        ValidateIssuer = true,
+                        ValidIssuer = JwtConfigs.Issuer,
+
+                        ValidateLifetime = true,
+                        LifetimeValidator = (notBefore, expires, securityToken, validationParameters) => DateTime.UtcNow < expires,
+
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtConfigs.Key)),
+                    };
+                });
 
             services.AddControllers(options =>
             {
@@ -110,8 +135,12 @@ namespace FakeXiecheng.Api
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            // 你在哪儿？
             app.UseRouting();
+            // 你是谁？
+            app.UseAuthentication();
+            // 你可以干什么?
+            app.UseAuthorization();
 
             app.UseSwagger();
 

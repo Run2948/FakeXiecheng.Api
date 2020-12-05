@@ -4,14 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using FakeXiecheng.Api.Common;
 using FakeXiecheng.Api.Common.Helper;
 using FakeXiecheng.Api.Models.Dtos;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 
 namespace FakeXiecheng.Api.Controllers
 {
