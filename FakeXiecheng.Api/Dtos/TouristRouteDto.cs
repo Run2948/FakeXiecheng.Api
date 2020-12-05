@@ -53,15 +53,15 @@ namespace FakeXiecheng.Api.Dtos
         public string DepartureCity { get; set; }
     }
 
-    // [TouristRouteTitleMustBeDifferentFromDescription]
-    public class TouristRouteForCreationDto : IValidatableObject
+    [TouristRouteTitleMustBeDifferentFromDescription]
+    public abstract class TouristRouteForManipulationDto
     {
         [Required(ErrorMessage = "title不可为空")]
         [MaxLength(100)]
         public string Title { get; set; }
         [Required]
         [MaxLength(1500)]
-        public string Description { get; set; }
+        public virtual string Description { get; set; }
         public decimal OriginalPrice { get; set; }
         public double? DiscountPresent { get; set; }
         public DateTime CreateTime { get; set; }
@@ -76,29 +76,42 @@ namespace FakeXiecheng.Api.Dtos
         public string DepartureCity { get; set; }
 
         public IEnumerable<TouristRoutePictureForCreationDto> TouristRoutePictures { get; set; }
+    }
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            if (Title == Description)
-            {
-                yield return new ValidationResult(
-                    "路线名称必须与描述不同",
-                    new[] { "TouristRouteForCreationDto" }
-                );
-            }
-        }
+    // [TouristRouteTitleMustBeDifferentFromDescription]
+    public class TouristRouteForCreationDto : TouristRouteForManipulationDto
+    //: IValidatableObject
+    {
+        // public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        // {
+        //     if (Title == Description)
+        //     {
+        //         yield return new ValidationResult(
+        //             "路线名称必须与描述不同",
+        //             new[] { "TouristRouteForCreationDto" }
+        //         );
+        //     }
+        // }
+    }
+
+    public class TouristRouteForUpdateDto : TouristRouteForManipulationDto
+    {
+        [Required(ErrorMessage = "更新必备")]
+        [MaxLength(1500)]
+        public override string Description { get; set; }
     }
 
     public class TouristRouteTitleMustBeDifferentFromDescription : ValidationAttribute
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var touristRouteDto = (TouristRouteForCreationDto)validationContext.ObjectInstance;
+            var touristRouteDto = (TouristRouteForManipulationDto)validationContext.ObjectInstance;
             if (touristRouteDto.Title == touristRouteDto.Description)
             {
                 return new ValidationResult(
                     "路线名称必须与描述不同",
-                    new[] { "TouristRouteForCreationDto" }
+                    // new[] { "TouristRouteForCreationDto" }
+                    new[] { "TouristRouteForManipulationDto" }
                 );
             }
 

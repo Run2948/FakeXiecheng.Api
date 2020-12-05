@@ -11,6 +11,8 @@ namespace FakeXiecheng.Api.Repository
     {
         Task<PaginationList<TouristRoute>> GetTouristRoutesAsync(string keyword, string ratingOperator, int? ratingValue, int pageNumber, int pageSize);
 
+        Task<IEnumerable<TouristRoute>> GetTouristRoutesAsync(IEnumerable<Guid> ids);
+
         Task<TouristRoute> GetTouristRouteAsync(Guid touristRouteId);
 
         Task<bool> TouristRouteExistsAsync(Guid touristRouteId);

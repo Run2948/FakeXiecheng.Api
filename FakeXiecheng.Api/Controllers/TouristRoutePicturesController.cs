@@ -25,6 +25,7 @@ namespace FakeXiecheng.Api.Controllers
         }
 
         [HttpGet]
+        [HttpHead]
         public async Task<IActionResult> Get([FromRoute] Guid touristRouteId)
         {
             if (!await _touristRouteRepository.TouristRouteExistsAsync(touristRouteId))
@@ -45,7 +46,7 @@ namespace FakeXiecheng.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateTouristRoutePicture([FromRoute] Guid touristRouteId, [FromBody] TouristRoutePictureForCreationDto touristRoutePictureForCreationDto)
+        public async Task<IActionResult> Post([FromRoute] Guid touristRouteId, [FromBody] TouristRoutePictureForCreationDto touristRoutePictureForCreationDto)
         {
             if (!await _touristRouteRepository.TouristRouteExistsAsync(touristRouteId))
                 return NotFound($"找不到{touristRouteId}旅游路线");
@@ -61,7 +62,7 @@ namespace FakeXiecheng.Api.Controllers
         }
 
         [HttpDelete("{pictureId}")]
-        public async Task<IActionResult> DeletePicture([FromRoute] Guid touristRouteId, [FromRoute] int pictureId)
+        public async Task<IActionResult> Delete([FromRoute] Guid touristRouteId, [FromRoute] int pictureId)
         {
             if (!await _touristRouteRepository.TouristRouteExistsAsync(touristRouteId))
                 return NotFound($"找不到{touristRouteId}旅游路线");

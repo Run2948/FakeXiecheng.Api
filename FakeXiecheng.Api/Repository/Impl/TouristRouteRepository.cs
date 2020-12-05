@@ -37,6 +37,11 @@ namespace FakeXiecheng.Api.Repository.Impl
             return await PaginationList<TouristRoute>.CreateAsync(pageNumber, pageSize, query);
         }
 
+        public async Task<IEnumerable<TouristRoute>> GetTouristRoutesAsync(IEnumerable<Guid> ids)
+        {
+            return await _context.TouristRoutes.Where(t => ids.Contains(t.Id)).ToListAsync();
+        }
+
         public async Task<TouristRoute> GetTouristRouteAsync(Guid touristRouteId)
         {
             // return await _context.TouristRoutes.FindAsync(touristRouteId);

@@ -41,9 +41,14 @@ namespace FakeXiecheng.Api
                 // .ForMember(dest => dest.TouristRoutePictures,
                 //     opt => opt.MapFrom((src, _, __, ctx) => ctx.Mapper.Map<List<TouristRoutePicture>>(src.TouristRoutePictures)))
                 ;
+            CreateMap<TouristRouteForUpdateDto, TouristRoute>();
+            CreateMap<TouristRoute, TouristRouteForUpdateDto>();
+
+
 
             CreateMap<TouristRoutePicture, TouristRoutePictureDto>();
             CreateMap<TouristRoutePictureForCreationDto, TouristRoutePicture>();
+            CreateMap<TouristRoutePictureDto, TouristRoutePictureForCreationDto>();
 
         }
     }
