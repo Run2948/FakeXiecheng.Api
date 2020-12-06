@@ -9,9 +9,9 @@ namespace FakeXiecheng.Api.Models
     {
         public string Address { get; set; }
 
-        // public virtual ShoppingCart ShoppingCart { get; set; }
+        public virtual ShoppingCart ShoppingCart { get; set; }
 
-        // public virtual ICollection<Order> Orders { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
 
         // 用户的角色信息
         public virtual ICollection<IdentityUserRole<string>> UserRoles { get; set; }
