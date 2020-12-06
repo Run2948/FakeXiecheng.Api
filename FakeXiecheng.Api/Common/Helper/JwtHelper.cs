@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
 namespace FakeXiecheng.Api.Common.Helper
@@ -15,18 +16,21 @@ namespace FakeXiecheng.Api.Common.Helper
         /// 获取token
         /// </summary>
         /// <returns></returns>
-        // public static string IssueToken(Manage manage)
-        public static string IssueToken(string userId)
+        public static string IssueToken(IdentityUser user, IList<string> roles)
         {
-            var claims = new[] {
+            var claims = new List<Claim> {
                 new Claim(ClaimTypes.Name,"JWT"),
-                new Claim(ClaimTypes.Role,"Admin"),
-                new Claim(JwtRegisteredClaimNames.Sub,userId),
-                // new Claim(nameof(Manage.Id),Convert.ToString(manage.Id)),
-                // new Claim(nameof(Manage.UserName),manage.UserName),
-                // new Claim(nameof(Manage.NickName),manage.NickName),
-                // new Claim(nameof(Manage.Level),Convert.ToString(manage.Level))
+                // new Claim(ClaimTypes.Role,"Admin"),
+                new Claim(JwtRegisteredClaimNames.Sub,user.Id),
+                new Claim(nameof(IdentityUser.UserName),user.UserName),
+                new Claim(nameof(IdentityUser.Email),user.Email),
+                new Claim(nameof(IdentityUser.PhoneNumber),Convert.ToString(user.PhoneNumber))
             };
+
+            if (roles != null && roles.Any())
+            {
+                claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+            }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtConfigs.Key));
 
@@ -48,11 +52,10 @@ namespace FakeXiecheng.Api.Common.Helper
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        // public static Manage ParseToken(string token)
-        public static string ParseToken(string token)
+        public static (IdentityUser, IList<string>) ParseToken(string token)
         {
             if (token is null)
-                return null;
+                return (null, null);
 
             var tokenStr = token.Replace("Bearer ", "");
 
@@ -62,17 +65,17 @@ namespace FakeXiecheng.Api.Common.Helper
 
             var claims = payload.Claims.ToList();
 
-            // var manage = new Manage()
-            // {
-            //     Id = Convert.ToInt32(claims.FirstOrDefault(claim => claim.Type == nameof(Manage.Id))?.Value),
-            //     UserName = claims.FirstOrDefault(claim => claim.Type == nameof(Manage.UserName))?.Value,
-            //     NickName = claims.FirstOrDefault(claim => claim.Type == nameof(Manage.NickName))?.Value,
-            //     Level = Convert.ToInt32(claims.FirstOrDefault(claim => claim.Type == nameof(Manage.Level))?.Value)
-            // };
-            //
-            // return manage;
+            var user = new IdentityUser()
+            {
+                Id = claims.FirstOrDefault(claim => claim.Type == JwtRegisteredClaimNames.Sub)?.Value,
+                UserName = claims.FirstOrDefault(claim => claim.Type == nameof(IdentityUser.UserName))?.Value,
+                Email = claims.FirstOrDefault(claim => claim.Type == nameof(IdentityUser.Email))?.Value,
+                PhoneNumber = claims.FirstOrDefault(claim => claim.Type == nameof(IdentityUser.PhoneNumber))?.Value
+            };
 
-            return claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub)?.Value;
+            var roles = claims.Where(claim => claim.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
+
+            return (user, roles);
         }
     }
 }

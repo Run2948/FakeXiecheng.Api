@@ -94,6 +94,7 @@ namespace FakeXiecheng.Api
                 // 当无法处理请求的 media-type 时，不返回默认的 media-type
                 options.ReturnHttpNotAcceptable = true;
                 // options.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
+                options.Filters.Add<ExceptionFilter>();
             })
                 .AddNewtonsoftJson(options =>
                 {
