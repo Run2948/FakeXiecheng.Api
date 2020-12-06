@@ -26,6 +26,7 @@ namespace FakeXiecheng.Api.Repository
         public virtual DbSet<TouristRoutePicture> TouristRoutePictures { get; set; }
         public virtual DbSet<ShoppingCart> ShoppingCarts { get; set; }
         public virtual DbSet<LineItem> LineItems { get; set; }
+        public virtual DbSet<Order> Orders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

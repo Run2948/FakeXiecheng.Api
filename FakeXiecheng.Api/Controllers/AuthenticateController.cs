@@ -62,12 +62,12 @@ namespace FakeXiecheng.Api.Controllers
                 return BadRequest();
             }
             //3.给新用户初始化购物车
-            // var shoppingCart = new ShoppingCart()
-            // {
-            //     Id = Guid.NewGuid(),
-            //     UserId = user.Id
-            // };
-            // await _touristRouteRepository.CreateShoppingCart(shoppingCart);
+            var shoppingCart = new ShoppingCart()
+            {
+                Id = Guid.NewGuid(),
+                UserId = user.Id
+            };
+            await _touristRouteRepository.CreateShoppingCart(shoppingCart);
             await _touristRouteRepository.SaveAsync();
 
             return Ok();

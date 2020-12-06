@@ -131,6 +131,8 @@ namespace FakeXiecheng.Api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Fake Xiecheng API", Version = "1.0" });
                 c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{MethodBase.GetCurrentMethod()?.DeclaringType?.Namespace}.xml"));
             });
+
+            services.AddHttpClient();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

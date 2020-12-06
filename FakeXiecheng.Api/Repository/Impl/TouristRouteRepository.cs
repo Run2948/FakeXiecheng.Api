@@ -103,6 +103,62 @@ namespace FakeXiecheng.Api.Repository.Impl
             _context.TouristRoutePictures.Remove(picture);
         }
 
+        public async Task<ShoppingCart> GetUserShoppingCart(string userId)
+        {
+            return await _context.ShoppingCarts.Include(s => s.User).Include(s => s.ShoppingCartItems)
+                .ThenInclude(li => li.TouristRoute)
+                .FirstOrDefaultAsync(s => s.UserId == userId);
+        }
+
+        public async Task CreateShoppingCart(ShoppingCart shoppingCart)
+        {
+            await _context.ShoppingCarts.AddAsync(shoppingCart);
+        }
+
+        public async Task AddShoppingCartItem(LineItem lineItem)
+        {
+            await _context.LineItems.AddAsync(lineItem);
+        }
+
+        public async Task<LineItem> GetShoppingCartItem(int lineItemId)
+        {
+            return await _context.LineItems.Where(li => li.Id == lineItemId).FirstOrDefaultAsync();
+        }
+
+        public void DeleteShoppingCartItem(LineItem lineItem)
+        {
+            _context.LineItems.Remove(lineItem);
+        }
+
+        public async Task<IEnumerable<LineItem>> GetShoppingCartItemsAsync(IEnumerable<int> lineItemIds)
+        {
+            return await _context.LineItems.Where(li => lineItemIds.Contains(li.Id)).ToListAsync();
+        }
+
+        public void DeleteShoppingCartItems(IEnumerable<LineItem> lineItems)
+        {
+            _context.LineItems.RemoveRange(lineItems);
+        }
+
+        public async Task AddOrderAsync(Order order)
+        {
+            await _context.Orders.AddAsync(order);
+        }
+
+        public async Task<PaginationList<Order>> GetUserOrders(string userId, int pageNumber, int pageSize)
+        {
+            IQueryable<Order> result = _context.Orders.Where(o => o.UserId == userId);
+            return await PaginationList<Order>.CreateAsync(pageNumber, pageSize, result);
+        }
+
+        public async Task<Order> GetOrder(Guid orderId)
+        {
+            return await _context.Orders
+                .Include(o => o.OrderItems).ThenInclude(oi => oi.TouristRoute)
+                .Where(o => o.Id == orderId)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<bool> SaveAsync()
         {
             return await _context.SaveChangesAsync() >= 0;

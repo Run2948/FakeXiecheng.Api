@@ -53,10 +53,10 @@ namespace FakeXiecheng.Api.Common.Helper
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public static (ApplicationUser, IList<string>) ParseToken(string token)
+        public static ApplicationUser ParseToken(string token)
         {
             if (token is null)
-                return (null, null);
+                return null;
 
             var tokenStr = token.Replace("Bearer ", "");
 
@@ -71,12 +71,11 @@ namespace FakeXiecheng.Api.Common.Helper
                 Id = claims.FirstOrDefault(claim => claim.Type == JwtRegisteredClaimNames.Sub)?.Value,
                 UserName = claims.FirstOrDefault(claim => claim.Type == nameof(ApplicationUser.UserName))?.Value,
                 Email = claims.FirstOrDefault(claim => claim.Type == nameof(ApplicationUser.Email))?.Value,
-                PhoneNumber = claims.FirstOrDefault(claim => claim.Type == nameof(ApplicationUser.PhoneNumber))?.Value
+                PhoneNumber = claims.FirstOrDefault(claim => claim.Type == nameof(ApplicationUser.PhoneNumber))?.Value,
+                // UserRoles = claims.Where(claim => claim.Type == ClaimTypes.Role).Select(c => c.Value).ToList()
             };
 
-            var roles = claims.Where(claim => claim.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
-
-            return (user, roles);
+            return user;
         }
     }
 }

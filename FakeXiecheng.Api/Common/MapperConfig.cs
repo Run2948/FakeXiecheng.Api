@@ -41,6 +41,7 @@ namespace FakeXiecheng.Api.Common
                 // .ForMember(dest => dest.TouristRoutePictures,
                 //     opt => opt.MapFrom((src, _, __, ctx) => ctx.Mapper.Map<List<TouristRoutePicture>>(src.TouristRoutePictures)))
                 ;
+
             CreateMap<TouristRouteForUpdateDto, TouristRoute>();
             CreateMap<TouristRoute, TouristRouteForUpdateDto>();
 
@@ -50,6 +51,21 @@ namespace FakeXiecheng.Api.Common
             CreateMap<TouristRoutePictureForCreationDto, TouristRoutePicture>();
             CreateMap<TouristRoutePictureDto, TouristRoutePictureForCreationDto>();
 
+
+
+            CreateMap<ShoppingCart, ShoppingCartDto>();
+            CreateMap<LineItem, LineItemDto>();
+
+
+
+            CreateMap<Order, OrderDto>()
+                .ForMember(
+                    dest => dest.State,
+                    opt =>
+                    {
+                        opt.MapFrom(src => src.State.ToString());
+                    }
+                );
         }
     }
 }

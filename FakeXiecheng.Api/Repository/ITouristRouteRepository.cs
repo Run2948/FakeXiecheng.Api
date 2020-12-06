@@ -31,16 +31,25 @@ namespace FakeXiecheng.Api.Repository
 
         void DeleteTouristRoutePicture(TouristRoutePicture picture);
 
-        // Task<ShoppingCart> GetShoppingCartByUserId(string userId);
-        // Task CreateShoppingCart(ShoppingCart shoppingCart);
-        // Task AddShoppingCartItem(LineItem lineItem);
-        // Task<LineItem> GetShoppingCartItemByItemId(int lineItemId);
-        // void DeleteShoppingCartItem(LineItem lineItem);
-        // Task<IEnumerable<LineItem>> GetShoppingCartsByIdListAsync(IEnumerable<int> lineItemIds);
-        // void DeleteShoppingCartItems(IEnumerable<LineItem> lineItems);
-        // Task AddOrderAsync(Order order);
-        // Task<PaginationList<Order>> GetOrdersByUserId(string userId, int pageNumber, int pageSize);
-        // Task<Order> GetOrderByOrderId(Guid orderId);
+        Task<ShoppingCart> GetUserShoppingCart(string userId);
+
+        Task CreateShoppingCart(ShoppingCart shoppingCart);
+
+        Task AddShoppingCartItem(LineItem lineItem);
+
+        Task<LineItem> GetShoppingCartItem(int lineItemId);
+
+        void DeleteShoppingCartItem(LineItem lineItem);
+
+        Task<IEnumerable<LineItem>> GetShoppingCartItemsAsync(IEnumerable<int> lineItemIds);
+
+        void DeleteShoppingCartItems(IEnumerable<LineItem> lineItems);
+
+        Task AddOrderAsync(Order order);
+
+        Task<PaginationList<Order>> GetUserOrders(string userId, int pageNumber, int pageSize);
+
+        Task<Order> GetOrder(Guid orderId);
 
         Task<bool> SaveAsync();
     }
