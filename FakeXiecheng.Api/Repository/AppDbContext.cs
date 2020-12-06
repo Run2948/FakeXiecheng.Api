@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 
 namespace FakeXiecheng.Api.Repository
 {
-    public class AppDbContext : IdentityDbContext<IdentityUser> //DbContext
+    public class AppDbContext : IdentityDbContext<ApplicationUser> //DbContext
     {
         private readonly ILogger<AppDbContext> _logger;
 

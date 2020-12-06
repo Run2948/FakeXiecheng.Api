@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using FakeXiecheng.Api.Common;
 using FakeXiecheng.Api.Common.Extensions;
+using FakeXiecheng.Api.Models;
 using FakeXiecheng.Api.Repository;
 using FakeXiecheng.Api.Repository.Impl;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -24,6 +25,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace FakeXiecheng.Api
 {
@@ -42,7 +44,7 @@ namespace FakeXiecheng.Api
         {
             Configuration.AddSectionValue<JwtConfigs>();
 
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>();
 
             // services.AddTransient<ITouristRouteRepository,MockTouristRouteRepository>();
@@ -130,9 +132,22 @@ namespace FakeXiecheng.Api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Fake Xiecheng API", Version = "1.0" });
                 c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{MethodBase.GetCurrentMethod()?.DeclaringType?.Namespace}.xml"));
+
+                c.OperationFilter<AddResponseHeadersFilter>();
+                c.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
+                c.OperationFilter<SecurityRequirementsOperationFilter>();
+                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                {
+                    Description = "<b>Please enter <code>Bearer {Token}</code> to authenticate.</b>",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey
+                });
             });
 
             services.AddHttpClient();
+
+            services.AddHttpContextAccessor();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

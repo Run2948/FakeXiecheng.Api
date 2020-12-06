@@ -47,8 +47,7 @@ namespace FakeXiecheng.Api.Controllers
         }
 
         [HttpPost]
-        [Authorize(AuthenticationSchemes = "Bearer")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> Post([FromRoute] Guid touristRouteId, [FromBody] TouristRoutePictureForCreationDto touristRoutePictureForCreationDto)
         {
             if (!await _touristRouteRepository.TouristRouteExistsAsync(touristRouteId))
@@ -65,8 +64,7 @@ namespace FakeXiecheng.Api.Controllers
         }
 
         [HttpDelete("{pictureId}")]
-        [Authorize(AuthenticationSchemes = "Bearer")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> Delete([FromRoute] Guid touristRouteId, [FromRoute] int pictureId)
         {
             if (!await _touristRouteRepository.TouristRouteExistsAsync(touristRouteId))

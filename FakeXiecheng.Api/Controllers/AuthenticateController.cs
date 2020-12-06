@@ -2,14 +2,17 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using FakeXiecheng.Api.Common.Helper;
+using FakeXiecheng.Api.Common;
 using FakeXiecheng.Api.Models;
 using FakeXiecheng.Api.Models.Dtos;
 using FakeXiecheng.Api.Repository;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 
 namespace FakeXiecheng.Api.Controllers
 {
@@ -42,7 +45,35 @@ namespace FakeXiecheng.Api.Controllers
                 return BadRequest();
             var user = await _userManager.FindByNameAsync(loginDto.Email);
             var userRoles = await _userManager.GetRolesAsync(user);
-            var tokenStr = JwtHelper.IssueToken(user, userRoles);
+            
+            // 2. 创建jwt
+            var claims = new List<Claim> {
+                new Claim(ClaimTypes.Name,"JWT"),
+                // Sub
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+                // new Claim(ClaimTypes.Role,"Admin"),
+            };
+
+            if (userRoles != null && userRoles.Any())
+            {
+                claims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));
+            }
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtConfigs.Key));
+
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: JwtConfigs.Issuer,
+                audience: JwtConfigs.Issuer,
+                claims: claims,
+                notBefore: DateTime.UtcNow,
+                expires: DateTime.UtcNow.AddMinutes(JwtConfigs.Expires),
+                signingCredentials: credentials);
+
+            var tokenStr = new JwtSecurityTokenHandler().WriteToken(token);
+
+            // 3. return 200 OK + jwt
             return Ok(tokenStr);
         }
 

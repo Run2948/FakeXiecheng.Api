@@ -31,6 +31,7 @@ namespace FakeXiecheng.Api.Controllers
         }
 
         [HttpGet]
+        [HttpHead]
         [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> Get()
         {
@@ -41,7 +42,7 @@ namespace FakeXiecheng.Api.Controllers
 
         [HttpPost("items")]
         [Authorize(AuthenticationSchemes = "Bearer")]
-        public async Task<IActionResult> AddShoppingCartItem([FromBody] AddShoppingCartItemDto addShoppingCartItemDto)
+        public async Task<IActionResult> Post([FromBody] AddShoppingCartItemDto addShoppingCartItemDto)
         {
             var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var shoppingCart = await _touristRouteRepository.GetUserShoppingCart(userId);
@@ -66,7 +67,7 @@ namespace FakeXiecheng.Api.Controllers
 
         [HttpDelete("items/{itemId}")]
         [Authorize(AuthenticationSchemes = "Bearer")]
-        public async Task<IActionResult> DeleteShoppingCartItem([FromRoute] int itemId)
+        public async Task<IActionResult> Delete([FromRoute] int itemId)
         {
             var lineItem = await _touristRouteRepository.GetShoppingCartItem(itemId);
             if (lineItem == null)
@@ -78,7 +79,7 @@ namespace FakeXiecheng.Api.Controllers
 
         [HttpDelete("items/({itemIds})")]
         [Authorize(AuthenticationSchemes = "Bearer")]
-        public async Task<IActionResult> DeleteShoppingCartItems([ModelBinder(BinderType = typeof(ArrayModelBinder))][FromRoute] IEnumerable<int> itemIds)
+        public async Task<IActionResult> Delete([ModelBinder(BinderType = typeof(ArrayModelBinder))][FromRoute] IEnumerable<int> itemIds)
         {
             var lineItems = await _touristRouteRepository.GetShoppingCartItemsAsync(itemIds);
             _touristRouteRepository.DeleteShoppingCartItems(lineItems);
@@ -88,7 +89,7 @@ namespace FakeXiecheng.Api.Controllers
 
         [HttpPost("checkout")]
         [Authorize(AuthenticationSchemes = "Bearer")]
-        public async Task<IActionResult> Checkout()
+        public async Task<IActionResult> Post()
         {
             var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var shoppingCart = await _touristRouteRepository.GetUserShoppingCart(userId);
