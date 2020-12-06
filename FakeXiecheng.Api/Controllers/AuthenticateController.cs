@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FakeXiecheng.Api.Common.Helper;
+using FakeXiecheng.Api.Models;
 using FakeXiecheng.Api.Models.Dtos;
 using FakeXiecheng.Api.Repository;
 using Microsoft.AspNetCore.Identity;
@@ -17,10 +18,10 @@ namespace FakeXiecheng.Api.Controllers
     public class AuthenticateController : ControllerBase
     {
         private readonly ITouristRouteRepository _touristRouteRepository;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public AuthenticateController(ITouristRouteRepository touristRouteRepository, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public AuthenticateController(ITouristRouteRepository touristRouteRepository, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _touristRouteRepository = touristRouteRepository;
             _userManager = userManager;
@@ -49,7 +50,7 @@ namespace FakeXiecheng.Api.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
         {
             //1. 使用用户名创建用户对象
-            var user = new IdentityUser()
+            var user = new ApplicationUser()
             {
                 UserName = registerDto.Email,
                 Email = registerDto.Email

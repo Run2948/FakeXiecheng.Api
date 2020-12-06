@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using FakeXiecheng.Api.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
@@ -16,15 +17,15 @@ namespace FakeXiecheng.Api.Common.Helper
         /// 获取token
         /// </summary>
         /// <returns></returns>
-        public static string IssueToken(IdentityUser user, IList<string> roles)
+        public static string IssueToken(ApplicationUser user, IList<string> roles)
         {
             var claims = new List<Claim> {
                 new Claim(ClaimTypes.Name,"JWT"),
                 // new Claim(ClaimTypes.Role,"Admin"),
                 new Claim(JwtRegisteredClaimNames.Sub,user.Id),
-                new Claim(nameof(IdentityUser.UserName),user.UserName),
-                new Claim(nameof(IdentityUser.Email),user.Email),
-                new Claim(nameof(IdentityUser.PhoneNumber),Convert.ToString(user.PhoneNumber))
+                new Claim(nameof(ApplicationUser.UserName),user.UserName),
+                new Claim(nameof(ApplicationUser.Email),user.Email),
+                new Claim(nameof(ApplicationUser.PhoneNumber),Convert.ToString(user.PhoneNumber))
             };
 
             if (roles != null && roles.Any())
@@ -52,7 +53,7 @@ namespace FakeXiecheng.Api.Common.Helper
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public static (IdentityUser, IList<string>) ParseToken(string token)
+        public static (ApplicationUser, IList<string>) ParseToken(string token)
         {
             if (token is null)
                 return (null, null);
@@ -65,12 +66,12 @@ namespace FakeXiecheng.Api.Common.Helper
 
             var claims = payload.Claims.ToList();
 
-            var user = new IdentityUser()
+            var user = new ApplicationUser()
             {
                 Id = claims.FirstOrDefault(claim => claim.Type == JwtRegisteredClaimNames.Sub)?.Value,
-                UserName = claims.FirstOrDefault(claim => claim.Type == nameof(IdentityUser.UserName))?.Value,
-                Email = claims.FirstOrDefault(claim => claim.Type == nameof(IdentityUser.Email))?.Value,
-                PhoneNumber = claims.FirstOrDefault(claim => claim.Type == nameof(IdentityUser.PhoneNumber))?.Value
+                UserName = claims.FirstOrDefault(claim => claim.Type == nameof(ApplicationUser.UserName))?.Value,
+                Email = claims.FirstOrDefault(claim => claim.Type == nameof(ApplicationUser.Email))?.Value,
+                PhoneNumber = claims.FirstOrDefault(claim => claim.Type == nameof(ApplicationUser.PhoneNumber))?.Value
             };
 
             var roles = claims.Where(claim => claim.Type == ClaimTypes.Role).Select(c => c.Value).ToList();

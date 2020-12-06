@@ -9,7 +9,7 @@ namespace FakeXiecheng.Api.Models
     {
         public string Address { get; set; }
 
-        // public ShoppingCart ShoppingCart { get; set; }
+        // public virtual ShoppingCart ShoppingCart { get; set; }
 
         // public virtual ICollection<Order> Orders { get; set; }
 
