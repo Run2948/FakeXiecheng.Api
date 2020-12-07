@@ -12,6 +12,9 @@ using FakeXiecheng.Api.Repository;
 using FakeXiecheng.Api.Models.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Newtonsoft.Json;
 
 namespace FakeXiecheng.Api.Controllers
 {
@@ -21,19 +24,22 @@ namespace FakeXiecheng.Api.Controllers
     {
         private readonly ITouristRouteRepository _touristRouteRepository;
         private readonly IMapper _mapper;
+        private readonly IUrlHelper _urlHelper;
 
-        public TouristRoutesController(ITouristRouteRepository touristRouteRepository, IMapper mapper)
+        public TouristRoutesController(ITouristRouteRepository touristRouteRepository, IMapper mapper, IUrlHelperFactory urlHelperFactory, IActionContextAccessor actionContextAccessor)
         {
             _touristRouteRepository = touristRouteRepository;
             _mapper = mapper;
+            _urlHelper = urlHelperFactory.GetUrlHelper(actionContextAccessor.ActionContext);
         }
 
-        [HttpGet]
+        [HttpGet(Name = "GetTouristRoutes")]
         [HttpHead]
         public async Task<IActionResult> Get([FromQuery] TouristRouteRequest request)
         {
             var routes = await _touristRouteRepository.GetTouristRoutesAsync(request.Keyword, request.RatingOperator, request.RatingValue, request.PageNumber, request.PageSize);
             if (!routes.Any()) return NotFound("没有找到旅游路线");
+            Response.Headers.Add(_urlHelper.GeneratePaginationHeader(routes, "GetTouristRoutes", request));
             return Ok(_mapper.Map<List<TouristRouteDto>>(routes));
         }
 

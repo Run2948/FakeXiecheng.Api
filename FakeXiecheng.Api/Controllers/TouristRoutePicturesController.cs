@@ -25,7 +25,7 @@ namespace FakeXiecheng.Api.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet(Name = "GetTouristRoutePictures")]
         [HttpHead]
         public async Task<IActionResult> Get([FromRoute] Guid touristRouteId)
         {
@@ -36,7 +36,7 @@ namespace FakeXiecheng.Api.Controllers
             return Ok(_mapper.Map<List<TouristRoutePictureDto>>(pictures));
         }
 
-        [HttpGet("{pictureId:int}", Name = "GetPictureById")]
+        [HttpGet("{pictureId:int}", Name = "GetRoutePictureById")]
         public async Task<IActionResult> Get([FromRoute] Guid touristRouteId, [FromRoute] int pictureId)
         {
             if (!await _touristRouteRepository.TouristRouteExistsAsync(touristRouteId))
@@ -57,7 +57,7 @@ namespace FakeXiecheng.Api.Controllers
             await _touristRouteRepository.SaveAsync();
             var pictureToReturn = _mapper.Map<TouristRoutePictureDto>(picture);
             return CreatedAtRoute(
-                "GetPictureById",
+                "GetRoutePictureById",
                 new { touristRouteId = picture.TouristRouteId, pictureId = picture.Id },
                 pictureToReturn
             );

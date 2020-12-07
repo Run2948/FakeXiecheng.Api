@@ -29,5 +29,17 @@
                 }
             }
         }
+
+        public PaginationRequest Decr(int page = 1)
+        {
+            PageNumber -= page;
+            return this;
+        }
+
+        public PaginationRequest Incr(int page = 1)
+        {
+            PageNumber += page;
+            return this;
+        }
     }
 }
