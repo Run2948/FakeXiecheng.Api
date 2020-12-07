@@ -37,7 +37,7 @@ namespace FakeXiecheng.Api.Controllers
         [HttpHead]
         public async Task<IActionResult> Get([FromQuery] TouristRouteRequest request)
         {
-            var routes = await _touristRouteRepository.GetTouristRoutesAsync(request.Keyword, request.RatingOperator, request.RatingValue, request.PageNumber, request.PageSize);
+            var routes = await _touristRouteRepository.GetTouristRoutesAsync(request.Keyword, request.RatingOperator, request.RatingValue, request.PageNumber, request.PageSize, request.OrderBy);
             if (!routes.Any()) return NotFound("没有找到旅游路线");
             Response.Headers.Add(_urlHelper.GeneratePaginationHeader(routes, "GetTouristRoutes", request));
             return Ok(_mapper.Map<List<TouristRouteDto>>(routes));

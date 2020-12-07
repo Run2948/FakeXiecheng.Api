@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FakeXiecheng.Api.Common.Extensions;
 using FakeXiecheng.Api.Common.Helper;
 using FakeXiecheng.Api.Models;
+using FakeXiecheng.Api.Models.Dtos;
+using FakeXiecheng.Api.Service;
 using Microsoft.EntityFrameworkCore;
 
 namespace FakeXiecheng.Api.Repository.Impl
@@ -11,13 +14,15 @@ namespace FakeXiecheng.Api.Repository.Impl
     public class TouristRouteRepository : ITouristRouteRepository
     {
         private readonly AppDbContext _context;
+        private readonly Dictionary<string, PropertyMappingValue> _touristRouteMappingDictionary;
 
-        public TouristRouteRepository(AppDbContext context)
+        public TouristRouteRepository(AppDbContext context, IPropertyMappingService propertyMappingService)
         {
             _context = context;
+            _touristRouteMappingDictionary = propertyMappingService.GetPropertyMapping<TouristRouteDto, TouristRoute>();
         }
 
-        public async Task<PaginationList<TouristRoute>> GetTouristRoutesAsync(string keyword, string ratingOperator, int? ratingValue, int pageNumber, int pageSize)
+        public async Task<PaginationList<TouristRoute>> GetTouristRoutesAsync(string keyword, string ratingOperator, int? ratingValue, int pageNumber, int pageSize, string orderBy)
         {
             IQueryable<TouristRoute> query = _context.TouristRoutes.Include(t => t.TouristRoutePictures);
             if (!string.IsNullOrWhiteSpace(keyword))
@@ -33,6 +38,10 @@ namespace FakeXiecheng.Api.Repository.Impl
                     "lessThan" => query.Where(t => t.Rating <= ratingValue),
                     _ => query.Where(t => t.Rating == ratingValue)
                 };
+            }
+            if (!string.IsNullOrEmpty(orderBy))
+            {
+                query = query.ApplySort(orderBy, _touristRouteMappingDictionary);
             }
             return await PaginationList<TouristRoute>.CreateAsync(pageNumber, pageSize, query);
         }

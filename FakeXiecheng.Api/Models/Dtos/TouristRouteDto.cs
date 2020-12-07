@@ -17,9 +17,9 @@ namespace FakeXiecheng.Api.Models.Dtos
         // 计算方式  原价*折扣 
         public decimal Price { get; set; }
 
-        //public decimal OriginalPrice { get; set; }
+        public decimal OriginalPrice { get; set; }
 
-        //public double? DiscountPresent { get; set; }
+        public double? DiscountPresent { get; set; }
 
         public DateTime CreateTime { get; set; }
 

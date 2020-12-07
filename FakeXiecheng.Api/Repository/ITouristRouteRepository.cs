@@ -9,7 +9,7 @@ namespace FakeXiecheng.Api.Repository
 {
     public interface ITouristRouteRepository
     {
-        Task<PaginationList<TouristRoute>> GetTouristRoutesAsync(string keyword, string ratingOperator, int? ratingValue, int pageNumber, int pageSize);
+        Task<PaginationList<TouristRoute>> GetTouristRoutesAsync(string keyword, string ratingOperator, int? ratingValue, int pageNumber, int pageSize, string orderBy);
 
         Task<IEnumerable<TouristRoute>> GetTouristRoutesAsync(IEnumerable<Guid> ids);
 

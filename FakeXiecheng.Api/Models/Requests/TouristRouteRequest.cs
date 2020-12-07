@@ -14,6 +14,8 @@ namespace FakeXiecheng.Api.Models.Requests
 
         public int? RatingValue { get; set; }
 
+        public string OrderBy { get; set; }
+
         private string _rating;
         public string Rating
         {

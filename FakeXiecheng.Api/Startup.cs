@@ -16,6 +16,8 @@ using FakeXiecheng.Api.Common.Extensions;
 using FakeXiecheng.Api.Models;
 using FakeXiecheng.Api.Repository;
 using FakeXiecheng.Api.Repository.Impl;
+using FakeXiecheng.Api.Service;
+using FakeXiecheng.Api.Service.Impl;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -150,6 +152,8 @@ namespace FakeXiecheng.Api
             services.AddHttpClient();
 
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+            services.AddTransient<IPropertyMappingService, PropertyMappingService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
