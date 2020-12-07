@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using FakeXiecheng.Api.Common.Extensions;
 using FakeXiecheng.Api.Models.Dtos;
 using FakeXiecheng.Api.Common.Helper;
 using FakeXiecheng.Api.Models;
@@ -41,20 +42,24 @@ namespace FakeXiecheng.Api.Controllers
         public async Task<IActionResult> Get([FromQuery] TouristRouteRequest request)
         {
             if (_propertyMappingService.PropertyMappingExists<TouristRouteDto, TouristRoute>(request.OrderBy))
-                return BadRequest($"排序参数{request.OrderBy}不存在");
+                return BadRequest($"排序参数{request.OrderBy}存在未识别的属性");
+            if (_propertyMappingService.PropertyExists<TouristRouteDto>(request.Fields))
+                return BadRequest($"塑性参数{request.Fields}存在未识别属性");
             var routes = await _touristRouteRepository.GetTouristRoutesAsync(request.Keyword, request.RatingOperator, request.RatingValue, request.PageNumber, request.PageSize, request.OrderBy);
             if (!routes.Any()) return NotFound("没有找到旅游路线");
             Response.Headers.Add(_urlHelper.GeneratePaginationHeader(routes, "GetTouristRoutes", request));
-            return Ok(_mapper.Map<List<TouristRouteDto>>(routes));
+            return Ok(_mapper.Map<List<TouristRouteDto>>(routes).ShapeData(request.Fields));
         }
 
         [HttpGet("{touristRouteId:Guid}", Name = "GetTouristRouteById")]
         // [HttpHead("{touristRouteId:Guid}")]
-        public async Task<IActionResult> Get(Guid touristRouteId)
+        public async Task<IActionResult> Get(Guid touristRouteId, string fields)
         {
+            if (_propertyMappingService.PropertyExists<TouristRouteDto>(fields))
+                return BadRequest($"塑性参数{fields}存在未识别属性");
             var route = await _touristRouteRepository.GetTouristRouteAsync(touristRouteId);
             if (route == null) return NotFound($"找不到{touristRouteId}旅游路线");
-            return Ok(_mapper.Map<TouristRouteDto>(route));
+            return Ok(_mapper.Map<TouristRouteDto>(route).ShapeData(fields));
         }
 
         [HttpPost]
