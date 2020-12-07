@@ -106,3 +106,58 @@ add-migration mysqlInit
 
 update-database
 ```
+
+### 容器化部署 .NET Core API
+
+* Dockerfile
+
+```dockerfile
+#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
+WORKDIR /app
+EXPOSE 80
+# EXPOSE 443
+
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
+WORKDIR /src
+COPY ["FakeXiecheng.Api.csproj", "./"]
+RUN dotnet restore "./FakeXiecheng.Api.csproj"
+COPY . .
+WORKDIR "/src/."
+RUN dotnet build "FakeXiecheng.Api.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "FakeXiecheng.Api.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "FakeXiecheng.Api.dll"]
+```
+
+* 创建并启动 
+
+```bash
+docker build -t fakexiechengapi .
+docker run -d --name fakexiechengapi -p8080:80 fakexiechengapi
+docker ps
+```
+
+* 找到 docker 容器中的数据库 IP 地址
+
+```bash
+docker inspect bridge
+```
+
+* 修改数据库连接字符串中的 `localhost` 为 `172.17.0.2`
+
+* 删除镜像，重新构建镜像并启动容器
+
+```bash
+docker stop fakexiechengapi
+docker rm fakexiechengapi
+docker build -t fakexiechengapi .
+docker run -d --name fakexiechengapi -p8080:80 fakexiechengapi
+docker ps
+```
