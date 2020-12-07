@@ -39,5 +39,22 @@ namespace FakeXiecheng.Api.Service.Impl
             }
             throw new Exception($"Cannot find exact property mapping instance for <{typeof(TSource)},{typeof(TDestination)}>.");
         }
+
+        public bool PropertyMappingExists<TSource, TDestination>(params string[] fields)
+        {
+            if (fields != null && fields.Any())
+            {
+                var propertyMapping = GetPropertyMapping<TSource, TDestination>();
+
+                foreach (var field in fields)
+                {
+                    var trimmedField = field.Trim();
+                    var indexOfFirstSpace = trimmedField.IndexOf(" ", StringComparison.Ordinal);
+                    var propertyName = indexOfFirstSpace == -1 ? trimmedField : trimmedField.Remove(indexOfFirstSpace);
+                    if (!propertyMapping.ContainsKey(propertyName)) return false;
+                }
+            }
+            return true;
+        }
     }
 }

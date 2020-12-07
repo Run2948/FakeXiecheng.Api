@@ -8,5 +8,7 @@ namespace FakeXiecheng.Api.Service
     public interface IPropertyMappingService
     {
         Dictionary<string, PropertyMappingValue> GetPropertyMapping<TSource, TDestination>();
+
+        bool PropertyMappingExists<TSource, TDestination>(params string[] fields);
     }
 }

@@ -10,6 +10,7 @@ using FakeXiecheng.Api.Common.Helper;
 using FakeXiecheng.Api.Models;
 using FakeXiecheng.Api.Repository;
 using FakeXiecheng.Api.Models.Requests;
+using FakeXiecheng.Api.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -24,12 +25,14 @@ namespace FakeXiecheng.Api.Controllers
     {
         private readonly ITouristRouteRepository _touristRouteRepository;
         private readonly IMapper _mapper;
+        private readonly IPropertyMappingService _propertyMappingService;
         private readonly IUrlHelper _urlHelper;
 
-        public TouristRoutesController(ITouristRouteRepository touristRouteRepository, IMapper mapper, IUrlHelperFactory urlHelperFactory, IActionContextAccessor actionContextAccessor)
+        public TouristRoutesController(ITouristRouteRepository touristRouteRepository, IMapper mapper, IUrlHelperFactory urlHelperFactory, IActionContextAccessor actionContextAccessor, IPropertyMappingService propertyMappingService)
         {
             _touristRouteRepository = touristRouteRepository;
             _mapper = mapper;
+            _propertyMappingService = propertyMappingService;
             _urlHelper = urlHelperFactory.GetUrlHelper(actionContextAccessor.ActionContext);
         }
 
@@ -37,6 +40,8 @@ namespace FakeXiecheng.Api.Controllers
         [HttpHead]
         public async Task<IActionResult> Get([FromQuery] TouristRouteRequest request)
         {
+            if (_propertyMappingService.PropertyMappingExists<TouristRouteDto, TouristRoute>(request.OrderBy))
+                return BadRequest($"排序参数{request.OrderBy}不存在");
             var routes = await _touristRouteRepository.GetTouristRoutesAsync(request.Keyword, request.RatingOperator, request.RatingValue, request.PageNumber, request.PageSize, request.OrderBy);
             if (!routes.Any()) return NotFound("没有找到旅游路线");
             Response.Headers.Add(_urlHelper.GeneratePaginationHeader(routes, "GetTouristRoutes", request));
